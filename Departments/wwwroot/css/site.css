@@ -1,0 +1,69 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+footer{
+    position:absolute;
+    bottom:0;
+    padding-bottom: 15px;
+}
+
+.w-10 {
+    width: 10%;
+}
+
+.w-20{
+    width: 20%;
+}
+
+.w-60{
+    width: 60%;
+}
+
+#c-modal, #e-modal{
+    position: absolute !important;
+    top:0;
+    right:0;
+    z-index: 10;
+    display:none;
+    background-color : rgb(128, 128, 128, 0.3);
+    width : 100%;
+    height : 100%;
+    padding-top: 12%;
+    padding-left: 20%;
+
+}
+
+.modal-content{
+    position: absolute !important;
+    background-color: white !important;
+    width:fit-content;
+    margin:auto;
+    padding:20px;
+    width: 60%;
+
+}
+
+.edit-modal {
+    width: 500px !important;
+    max-width: 500px !important;
+}
+
+.form-label {
+    width: 100px;
+}
