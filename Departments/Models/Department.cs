@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Departments.Models
@@ -10,6 +11,7 @@ namespace Departments.Models
 
         [Required]
         [StringLength(50)]
+        [DisplayName("Department Name")]
         [Remote("IsNameAvailble", "DepartmentController", ErrorMessage = "Name Already Exist.")]
         public string Name { get; set; }
 
