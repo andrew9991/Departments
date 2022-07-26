@@ -58,6 +58,31 @@
     </div>
 </div>
 
+<div id="emp-modal">
+    <div class="modal-content">
+        <button onclick="Employees()" class="close-modal">x</button>
+        <table class="table w-100">
+            <thead>
+                <tr>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Date Added
+                    </th>
+@*                    <th>
+                        @Html.DisplayNameFor(model => model.CreateDepartment.Limit)
+                    </th>*@
+                    @*<th class="w-20"></th>*@
+                </tr>
+            </thead>
+            <tbody id="emp-table-body">
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
 <h1>Index</h1>
 
 <p>
@@ -92,7 +117,7 @@
             </td>
             <td>
                 <button id="edit-button" onclick='Edit(@Json.Serialize(@item.Id))'>Edit</button>
-                <button>Employees</button>
+                <button id="emp-button" onclick='Employees(@Json.Serialize(@item.Id))'>Employees</button>
                 <button id="delete-button" onclick='Delete(@Json.Serialize($"delete-dep-{@item.Id}"))'>Delete</button>
                 
             </td>

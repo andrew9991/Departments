@@ -18,6 +18,9 @@ var editModal = document.getElementById("e-modal");
 var deleteShown = false;
 var lastId = "";
 
+var employeesShown = false;
+var empModal = document.getElementById("emp-modal");
+
 if (createShown) {
     createModal.style.display = "initial";
 }
@@ -75,20 +78,63 @@ function Edit(id) {
     window.sessionStorage.setItem("editShown", editShown ? 't' : 'f');
 }
 
+function Employees(id) {
+    if (!employeesShown) {
+        empModal.style.display = "initial";
+        $.ajax({
+            type: 'GET',
+            url: 'Departments/getEmployees?id=' + id,
+            contentType: 'json',
+            success: function (result) {
+                //console.log('Data received: ');
+                //console.log(result);
+                var table = "";
+                for (var emp in result) {
+                    //console.log(result[emp]);
+                    table += "<tr> \n <td> \n";
+                    table += result[emp].name + '\n';
+                    table += "<td> \n";
+                    table += result[emp].dateAdded;
+                    //table += "<\\td> \n <\\tr>";
+                }
+                //console.log(table);
+                document.getElementById("emp-table-body").innerHTML = table;
+
+            }
+        });
+    }
+    else {
+        empModal.style.display = "none";
+    }
+    employeesShown = !employeesShown;
+}
+
+
 window.onclick = function (event) {
-    if (event.target == createModal || event.target == editModal || event.target == document.getElementById(lastId)) {
-        createModal.style.display = "none";
-        createShown = false;
-        window.sessionStorage.setItem("createShown", 'f');
-        document.getElementById("create-form").reset();
+    if (event.target == createModal || event.target == editModal || event.target == document.getElementById(lastId) || event.target == empModal) {
+        if (createModal) {
+            createModal.style.display = "none";
+            createShown = false;
+            window.sessionStorage.setItem("createShown", 'f');
+            document.getElementById("create-form").reset();
+        }
 
-        editModal.style.display = "none";
-        editShown = false;
-        window.sessionStorage.setItem("editShown", 'f');
-        document.getElementById("edit-form").reset();
+        if (editModal) {
+            editModal.style.display = "none";
+            editShown = false;
+            window.sessionStorage.setItem("editShown", 'f');
+            document.getElementById("edit-form").reset();
+        }
 
-        document.getElementById(lastId).style.display = "none";
-        deleteShown = false;
+        if (lastId != "") {
+            document.getElementById(lastId).style.display = "none";
+            deleteShown = false;
+        }
+
+        if (empModal) {
+            empModal.style.display = "none";
+            employeesShown = false;
+        }
     }
 }
 

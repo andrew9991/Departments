@@ -62,6 +62,11 @@ namespace Departments.Controllers
             return new JsonResult(_db.Departments.Find(id));
         }
 
+        public JsonResult getEmployees (int id)
+        {
+            return new JsonResult(_db.Users.Where(u => u.DepartmentId == id));
+        }
+
         [HttpPost]
         public IActionResult Edit(DepartmentViewModel dvm)
         {

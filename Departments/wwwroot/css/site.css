@@ -35,7 +35,7 @@ footer{
     width: 60%;
 }
 
-#c-modal, #e-modal, .delete-modal{
+#c-modal, #e-modal, .delete-modal, #emp-modal{
     position: absolute !important;
     top:0;
     right:0;
