@@ -2,6 +2,7 @@
 using Departments.Models;
 using Departments.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Departments.Controllers
 {
@@ -84,6 +85,14 @@ namespace Departments.Controllers
                 return View("Index", dvm);
             }
 
+            if (_db.Users.Where(u => u.DepartmentId == dep.Id).ToList().Count >= dep.Limit)
+            {
+                ModelState.AddModelError("EditDepartment.Limit", "Employees exceed limit ");
+                dvm.Departments = _db.Departments;
+                return View("Index", dvm);
+            }
+
+            _db.Entry(duplicate).State = EntityState.Detached;
             _db.Departments.Update(dep);
             _db.SaveChanges();
             return RedirectToAction("Index");

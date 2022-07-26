@@ -30,6 +30,31 @@
     </div>
 </div>
 
+<div id="e-modal">
+    <div class="modal-content">
+        <button onclick="EditEmp()" class="close-modal">x</button>
+        <form id="edit-form" method="post" action="@Url.Action("Edit")">
+            <input id="edit-id" asp-for = "EditUser.Id" style="display:none"/>
+            <div class="mb-4">
+                <label asp-for = "EditUser.Name" class="form-label"></label>
+                <input id="edit-name-input" asp-for = "EditUser.Name" />
+                <span asp-validation-for = "EditUser.Name" class="text-danger"></span>
+            </div>
+            <div class="mb-4">
+                <label asp-for = "EditUser.DateAdded" class="form-label"></label>
+                <input id="edit-dateAdded-input" asp-for = "EditUser.DateAdded" />
+                <span asp-validation-for = "EditUser.DateAdded" class="text-danger"></span>
+            </div>
+            <div class="mb-4">
+                <label asp-for = "EditUser.Department.Name" class="form-label"></label>
+                <input id="edit-depName-input" asp-for = "EditUser.Department.Name" />
+                <span asp-validation-for = "EditUser.Department.Name" class="text-danger"></span>
+            </div>
+            <button type="submit">Update</button>
+        </form>
+    </div>
+</div>
+
 <h1>View</h1>
 
 <p>
@@ -69,11 +94,26 @@
                 @Html.DisplayFor(modelItem => item.User.Description)
             </td>*@
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <button id="edit-button" onclick='EditEmp(@Json.Serialize(@item.Id))'>Edit</button>
+                <button id="details-button">Details</button>
+                <button id="delete-button" onclick='DeleteEmp(@Json.Serialize($"delete-emp-{@item.Id}"))'>Delete</button>
             </td>
         </tr>
 }
     </tbody>
 </table>
+
+@foreach (var item in Model.users)
+{
+    <div id= "delete-emp-@item.Id" class="delete-modal">
+        <div class="del-modal-content">
+            <button onclick='DeleteEmp(@Json.Serialize($"delete-emp-{@item.Id}"))' class="close-modal del-close">x</button>
+            <form id="delete-form-@item.Id" method="post" asp-controller = "User" asp-action="Delete" asp-route-id = "@item.Id">
+                <p>Are you sure you want to delete @item.Name ?</p>
+                <div>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+}

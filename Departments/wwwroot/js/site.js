@@ -18,6 +18,8 @@ var editModal = document.getElementById("e-modal");
 var deleteShown = false;
 var lastId = "";
 
+var lastEmpId = "";
+
 var employeesShown = false;
 var empModal = document.getElementById("emp-modal");
 
@@ -51,10 +53,20 @@ function Delete(id) {
     deleteShown = !deleteShown;
 }
 
+function DeleteEmp(id) {
+    lastEmpId = id;
+    if (!deleteShown) {
+        document.getElementById(id).style.display = "initial";
+    }
+    else {
+        document.getElementById(id).style.display = "none";
+    }
+    deleteShown = !deleteShown;
+}
+
 
 function Edit(id) {
 
-    console.log(id);
     if (!editShown) {
         editModal.style.display = "initial";
         $.ajax({
@@ -68,6 +80,43 @@ function Edit(id) {
                 document.getElementById("edit-limit-input").value = result.limit;
                 document.getElementById("edit-description-input").value = result.description;
                 document.getElementById("edit-id").value = result.id;
+            }
+        });
+    }
+    else {
+        editModal.style.display = "none";
+    }
+    editShown = !editShown;
+    window.sessionStorage.setItem("editShown", editShown ? 't' : 'f');
+}
+
+function EditEmp(id) {
+
+    if (!editShown) {
+        editModal.style.display = "initial";
+        $.ajax({
+            type: 'GET',
+            url: 'User/getEmployee?id=' + id,
+            contentType: 'json',
+            success: function (result) {
+                //console.log('Data received: ');
+                //console.log(result);
+                document.getElementById("edit-name-input").value = result.name;
+                document.getElementById("edit-dateAdded-input").value = result.dateAdded;
+                document.getElementById("edit-id").value = result.id;
+
+                $.ajax({
+                    type: 'GET',
+                    url: 'Departments/getDepartment?id=' + result.departmentId,
+                    contentType: 'json',
+                    success: function (res) {
+                        //console.log('Data received: ');
+                        //console.log(result);
+                        document.getElementById("edit-depName-input").value = res.name;
+
+                    }
+                });
+
             }
         });
     }
@@ -111,7 +160,7 @@ function Employees(id) {
 
 
 window.onclick = function (event) {
-    if (event.target == createModal || event.target == editModal || event.target == document.getElementById(lastId) || event.target == empModal) {
+    if (event.target == createModal || event.target == editModal || event.target == document.getElementById(lastId) || event.target == document.getElementById(lastEmpId) || event.target == empModal) {
         if (createModal) {
             createModal.style.display = "none";
             createShown = false;
@@ -128,6 +177,11 @@ window.onclick = function (event) {
 
         if (lastId != "") {
             document.getElementById(lastId).style.display = "none";
+            deleteShown = false;
+        }
+
+        if (lastEmpId != "") {
+            document.getElementById(lastEmpId).style.display = "none";
             deleteShown = false;
         }
 
