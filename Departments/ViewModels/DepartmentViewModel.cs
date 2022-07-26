@@ -7,6 +7,7 @@ namespace Departments.ViewModels
         public IEnumerable<Department> Departments { get; set; }
 
         public Department CreateDepartment { get; set; }
+        public Department EditDepartment { get; set; }
 
 
     }

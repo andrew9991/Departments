@@ -28,14 +28,14 @@ footer{
 }
 
 .w-20{
-    width: 20%;
+    width: 23%;
 }
 
 .w-60{
     width: 60%;
 }
 
-#c-modal, #e-modal{
+#c-modal, #e-modal, .delete-modal{
     position: absolute !important;
     top:0;
     right:0;
@@ -59,6 +59,28 @@ footer{
 
 }
 
+.del-modal-content {
+    position: absolute !important;
+    background-color: white !important;
+    width: fit-content;
+    margin: auto;
+    padding: 20px 40px 20px 20px;
+    left:0;
+    right:0;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.close-modal{
+    position:absolute;
+    right: 20px;
+}
+
+.del-close{
+   right: 10px;
+   top: 10px;
+}
+
 .edit-modal {
     width: 500px !important;
     max-width: 500px !important;
@@ -66,4 +88,10 @@ footer{
 
 .form-label {
     width: 100px;
+}
+
+#edit-description-input{
+    width:42%;
+    resize:vertical;
+    overflow:scroll;
 }

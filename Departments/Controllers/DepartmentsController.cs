@@ -9,57 +9,96 @@ namespace Departments.Controllers
     {
         private readonly ApplicationDbContext _db;
         private DepartmentViewModel _dvm;
-        private string _depToEdit;
 
         public DepartmentsController(ApplicationDbContext db)
         {
-            _dvm = new DepartmentViewModel(); 
+            _dvm = new DepartmentViewModel();
             _db = db;
-            _depToEdit = "";
         }
         public IActionResult Index()
         {
-           _dvm.Departments = _db.Departments;
-           return View(_dvm);
+            _dvm.Departments = _db.Departments;
+            return View(_dvm);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Index(DepartmentViewModel departmentViewModel)
+        public IActionResult Create(DepartmentViewModel departmentViewModel)
         {
-            departmentViewModel.Departments = _db.Departments;
-            if (ModelState.IsValid)
+            bool fine = true;
+            if (departmentViewModel.CreateDepartment.Name == null)
+            {
+                ModelState.AddModelError("CreateDepartment.Name", "name can't be empty");
+                fine = false;
+            }
+            else if (_db.Departments.FirstOrDefault(x => x.Name == departmentViewModel.CreateDepartment.Name) != null)
+            {
+                ModelState.AddModelError("CreateDepartment.Name", "name already exists");
+                fine = false;
+            }
+            if (departmentViewModel.CreateDepartment.Description == null)
+            {
+                ModelState.AddModelError("CreateDepartment.Description", "Description can't be empty");
+                fine = false;
+            }
+            if (departmentViewModel.CreateDepartment.Limit == null)
+            {
+                ModelState.AddModelError("CreateDepartment.Limit", "Limit can't be empty");
+                fine = false;
+            }
+            if (fine)
             {
                 _db.Departments.Add(departmentViewModel.CreateDepartment);
                 _db.SaveChanges();
                 return RedirectToAction("Index");
             }
             departmentViewModel.Departments = _db.Departments;
-            return View(departmentViewModel);
+            return View("Index", departmentViewModel);
         }
 
-        public IActionResult Edit(string id)
+        //[HttpGet, Route("Index/{id:int}")]
+        public JsonResult getDepartment(int id)
         {
-            var dep = _db.Departments.Where(x => x.Name == id).FirstOrDefault();
-            _depToEdit = id;
-            return PartialView("_EditDepartmentPartial", dep);
+            return new JsonResult(_db.Departments.Find(id));
         }
 
         [HttpPost]
-        IActionResult Edit(Department dep)
+        public IActionResult Edit(DepartmentViewModel dvm)
         {
-            if(ModelState.IsValid && dep.Name == _depToEdit)
+            var dep = dvm.EditDepartment;
+            if (dep.Name == null || dep.Description == null || dep.Limit == null || dep.Limit <= 0)
             {
-                _db.Update(dep);
+                dvm.Departments = _db.Departments;
+                return View("Index", dvm);
+            }
+            var duplicate = _db.Departments.FirstOrDefault(d => d.Name == dep.Name);
+            if (duplicate != null && duplicate.Id != dep.Id)
+            {
+                ModelState.AddModelError("EditDepartment.Name", "Name already exists");
+                dvm.Departments = _db.Departments;
+                return View("Index", dvm);
+            }
+
+            _db.Departments.Update(dep);
+            _db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+        [HttpPost]
+        [Route("{id}")]
+        public IActionResult Delete(int? id)
+        {
+            var dep = _db.Departments.Find(id);
+            if(dep != null)
+            {
+                _db.Departments.Remove(dep);
                 _db.SaveChanges();
             }
-            else if (ModelState.IsValid && dep.Name != _depToEdit)
-            {
-                _db.Remove(_db.Departments.Where(x => x.Name == dep.Name).FirstOrDefault());
-                _db.Departments.Add(dep);
-                _db.SaveChanges();
-            }
-            return PartialView("_EditDepartmentPartial", dep);
+            DepartmentViewModel dvm = new DepartmentViewModel();
+            dvm.Departments = _db.Departments;
+            return View("Index", dvm) ;
         }
     }
+
+
 }
+

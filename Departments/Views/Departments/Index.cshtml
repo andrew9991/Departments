@@ -9,7 +9,9 @@
 
 <div id="c-modal">
     <div class="modal-content">
-        <form id="create-form" method="post">
+        <button onclick="Create()" class="close-modal">x</button>
+        <form id="create-form" method="post" asp-action="Create">
+            @*<div asp-validation-summary="All"></div>*@
             <div class="mb-4">
                 <label asp-for = "CreateDepartment.Name" class="form-label"></label>
                 <input asp-for = "CreateDepartment.Name" />
@@ -26,6 +28,32 @@
                 <span asp-validation-for = "CreateDepartment.Limit" class="text-danger"></span>
             </div>
             <button type="submit">Create</button>
+        </form>
+    </div>
+</div>
+
+<div id="e-modal">
+    <div class="modal-content">
+        <button onclick="Edit()" class="close-modal">x</button>
+        <form id="edit-form" method="post" action="@Url.Action("Edit")">
+            @*<div asp-validation-summary="All"></div>*@
+            <input id="edit-id" asp-for = "EditDepartment.Id" style="display:none"/>
+            <div class="mb-4">
+                <label asp-for = "EditDepartment.Name" class="form-label"></label>
+                <input id="edit-name-input" asp-for = "EditDepartment.Name" />
+                <span asp-validation-for = "EditDepartment.Name" class="text-danger"></span>
+            </div>
+            <div class="mb-4">
+                <label asp-for = "EditDepartment.Description" class="form-label"></label>
+                <input id="edit-description-input" asp-for = "EditDepartment.Description" />
+                <span asp-validation-for = "EditDepartment.Description" class="text-danger"></span>
+            </div>
+            <div class="mb-4">
+                <label asp-for = "EditDepartment.Limit" class="form-label"></label>
+                <input id="edit-limit-input" asp-for = "EditDepartment.Limit" />
+                <span asp-validation-for = "EditDepartment.Limit" class="text-danger"></span>
+            </div>
+            <button type="submit">Update</button>
         </form>
     </div>
 </div>
@@ -63,15 +91,27 @@
                 @Html.DisplayFor(modelItem => item.Limit)
             </td>
             <td>
-                <button type="button" class="btn btn-primary" data-toggle="ajax-modal" data-target="#editDepartment" 
-                data-url="@Url.Action($"Edit/{item.Name}")">Edit</button>
-                <a asp-action="Details" asp-route-id="@item.Name">Employees</a> |
-                <a asp-action="Delete" asp-route-id="@item.Name">Delete</a>
+                <button id="edit-button" onclick='Edit(@Json.Serialize(@item.Id))'>Edit</button>
+                <button>Employees</button>
+                <button id="delete-button" onclick='Delete(@Json.Serialize($"delete-dep-{@item.Id}"))'>Delete</button>
+                
             </td>
-        </tr>
+        </tr> 
 }
     </tbody>
 </table>
 
-
-
+@foreach (var item in Model.Departments)
+{
+    <div id= "delete-dep-@item.Id" class="delete-modal">
+        <div class="del-modal-content">
+            <button onclick='Delete(@Json.Serialize($"delete-dep-{@item.Id}"))' class="close-modal del-close">x</button>
+            <form id="delete-form-@item.Id" method="post" asp-action="Delete" asp-route-id = "@item.Id">
+                <p>Are you sure you want to delete the @item.Name Department?</p>
+                <div>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+}

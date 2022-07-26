@@ -15,7 +15,7 @@ namespace Departments.Models
 
         [Required]
         [ForeignKey("Departments")]
-        public string DepartmentName { get; set; }
+        public int DepId { get; set; }
 
         public virtual Department Department { get; set; }
     }

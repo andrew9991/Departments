@@ -1,10 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace Departments.Models
 {
     public class Department
     {
         [Key]
+        public int Id { get; set; }
+
+        [Required]
+        [StringLength(50)]
+        [Remote("IsNameAvailble", "DepartmentController", ErrorMessage = "Name Already Exist.")]
         public string Name { get; set; }
 
         [Required]
