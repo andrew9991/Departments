@@ -15,9 +15,9 @@ namespace Departments.ViewModels
 
         public Dictionary<string, string> ImagesDict { get; set; }
 
-        public UserViewModel(Dictionary<string, string> imagesDict)
+        public UserViewModel()
         {
-            ImagesDict = imagesDict;
+            ImagesDict = new Dictionary<string, string>();
         }
     }
 }

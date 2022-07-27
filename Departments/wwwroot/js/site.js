@@ -100,10 +100,11 @@ function EditEmp(id) {
             contentType: 'json',
             success: function (result) {
                 //console.log('Data received: ');
-                //console.log(result);
+                console.log(result);
                 document.getElementById("edit-name-input").value = result.name;
                 document.getElementById("edit-dateAdded-input").value = result.dateAdded;
                 document.getElementById("edit-id").value = result.id;
+                document.getElementById("edit-pp").src = "uploads/".concat(result.profilePicture ? result.profilePicture : "default.jpg");
 
                 $.ajax({
                     type: 'GET',

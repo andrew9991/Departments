@@ -19,7 +19,7 @@ namespace Departments.Controllers
         {
             _db = db;
             settings = new Dictionary<string, string>();
-            _uvm = new UserViewModel(settings);
+            _uvm = new UserViewModel();
             Environment = environment;
         }
 
@@ -75,22 +75,26 @@ namespace Departments.Controllers
                 uvm.users = _db.Users;
                 return View("Index", uvm);
             }
-
-            string wwwPath = this.Environment.WebRootPath;
-            string contentPath = this.Environment.ContentRootPath;
-
-            string path = Path.Combine(this.Environment.WebRootPath, "uploads");
-            if (!Directory.Exists(path))
+            if (uvm.Image != null)
             {
-                Directory.CreateDirectory(path);
-            }
 
-            string fileName = DateTime.Now.ToString().GetHashCode().ToString("x") + '.' + uvm.Image.FileName.ToString().Split('.')[1];
-            using (FileStream stream = new FileStream(Path.Combine(path, fileName), FileMode.Create))
-            {
-                uvm.Image.CopyTo(stream);
+
+                string wwwPath = this.Environment.WebRootPath;
+                string contentPath = this.Environment.ContentRootPath;
+
+                string path = Path.Combine(this.Environment.WebRootPath, "uploads");
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+
+                string fileName = DateTime.Now.ToString().GetHashCode().ToString("x") + '.' + uvm.Image.FileName.ToString().Split('.')[1];
+                using (FileStream stream = new FileStream(Path.Combine(path, fileName), FileMode.Create))
+                {
+                    uvm.Image.CopyTo(stream);
+                }
+                uvm.CreateUser.ProfilePicture = fileName;
             }
-            uvm.CreateUser.ProfilePicture = fileName;
             uvm.CreateUser.Department = department;
             uvm.CreateUser.Id = 0;
             //_db.Entry(department).State = EntityState.Detached;
@@ -121,6 +125,22 @@ namespace Departments.Controllers
                 uvm.users = _db.Users;
                 return View("Index", uvm);
             }
+
+            if (uvm.Image != null)
+            {
+                string path = Path.Combine(this.Environment.WebRootPath, "uploads");
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+
+                string fileName = DateTime.Now.ToString().GetHashCode().ToString("x") + '.' + uvm.Image.FileName.ToString().Split('.')[1];
+                using (FileStream stream = new FileStream(Path.Combine(path, fileName), FileMode.Create))
+                {
+                    uvm.Image.CopyTo(stream);
+                }
+                emp.ProfilePicture = fileName;
+            }
             emp.Department = exists;
             _db.Entry(exists).State = EntityState.Detached;
             _db.Users.Update(emp);
@@ -139,7 +159,7 @@ namespace Departments.Controllers
                 _db.SaveChanges();
             }
 
-            UserViewModel uvm = new UserViewModel(settings);
+            UserViewModel uvm = new UserViewModel();
             uvm.users = _db.Users;
             return View("Index", uvm);
         }
