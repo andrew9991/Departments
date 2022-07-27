@@ -3,6 +3,7 @@ using Departments.Models;
 using Departments.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 
 namespace Departments.Controllers
 {
@@ -11,16 +12,32 @@ namespace Departments.Controllers
         private IWebHostEnvironment Environment;
         private readonly ApplicationDbContext _db;
         private UserViewModel _uvm;
+        Dictionary<string, string> settings;
+
 
         public UserController(ApplicationDbContext db, IWebHostEnvironment environment)
         {
             _db = db;
-            _uvm = new UserViewModel();
+            settings = new Dictionary<string, string>();
+            _uvm = new UserViewModel(settings);
             Environment = environment;
+        }
+
+        private void getImages()
+        {
+            var provider = new PhysicalFileProvider(Environment.WebRootPath);
+            var contents = provider.GetDirectoryContents(Path.Combine("uploads", ""));
+            var objFiles = contents.OrderBy(m => m.LastModified);
+
+            foreach (var item in objFiles.ToList())
+            {
+                _uvm.ImagesDict.Add(item.Name, item.Name);
+            }
         }
 
         public IActionResult Index()
         {
+            getImages();
             _uvm.users = _db.Users;
             return View(_uvm);
         }
@@ -121,7 +138,8 @@ namespace Departments.Controllers
                 _db.Users.Remove(emp);
                 _db.SaveChanges();
             }
-            UserViewModel uvm = new UserViewModel();
+
+            UserViewModel uvm = new UserViewModel(settings);
             uvm.users = _db.Users;
             return View("Index", uvm);
         }

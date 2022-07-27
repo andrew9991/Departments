@@ -12,6 +12,12 @@ namespace Departments.ViewModels
 
         [DisplayName("Profile Picture")]
         public IFormFile Image { get; set; }
-        
+
+        public Dictionary<string, string> ImagesDict { get; set; }
+
+        public UserViewModel(Dictionary<string, string> imagesDict)
+        {
+            ImagesDict = imagesDict;
+        }
     }
 }
