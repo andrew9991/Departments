@@ -9,6 +9,6 @@ namespace Departments.ViewModels
         public Department CreateDepartment { get; set; }
         public Department EditDepartment { get; set; }
 
-
     }
 }
+

@@ -185,6 +185,9 @@ function Employees(id) {
     employeesShown = !employeesShown;
 }
 
+function clss() {
+    sessionStorage.clear();
+}
 
 window.onclick = function (event) {
     if (event.target == createModal || event.target == editModal || event.target == document.getElementById(lastId) || event.target == document.getElementById(lastEmpId) || event.target == empModal) {

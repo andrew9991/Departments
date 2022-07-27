@@ -33,6 +33,7 @@ namespace Departments.Controllers
             {
                 _uvm.ImagesDict.Add(item.Name, item.Name);
             }
+            settings = _uvm.ImagesDict;
         }
 
         public IActionResult Index()
@@ -52,33 +53,39 @@ namespace Departments.Controllers
             return new JsonResult(_db.Departments);
         }
 
-
         [HttpPost]
         public IActionResult Create(UserViewModel uvm)
         {
+            bool fine = true;
             if(uvm.CreateUser.Name == null || uvm.CreateUser.DateAdded == null || uvm.CreateUser.Department == null)
             {
-                uvm.users = _db.Users;
-                return View("Index", uvm);
+                fine = false;
             }
 
             Department department = _db.Departments.FirstOrDefault(x => x.Name == uvm.CreateUser.Department.Name);
             if (department == null)
             {
                 ModelState.AddModelError("CreateUser.Department.Name", "Department doesn't exist");
-                uvm.users = _db.Users;
-                return View("Index", uvm);
+                fine = false;
             }
             else if (_db.Users.Where(u => u.DepartmentId == department.Id).ToList().Count >= department.Limit)
             {
                 ModelState.AddModelError("CreateUser.Department.Name", "Department is already full");
-                uvm.users = _db.Users;
-                return View("Index", uvm);
+                fine = false;
             }
+
+            if (!fine)
+            {
+                //uvm.ImagesDict = settings;
+                //uvm.users = _db.Users;
+                //return View("Index", uvm);
+                getImages();
+                _uvm.users = _db.Users;
+                return View("Index", _uvm);
+            }
+
             if (uvm.Image != null)
             {
-
-
                 string wwwPath = this.Environment.WebRootPath;
                 string contentPath = this.Environment.ContentRootPath;
 
@@ -95,11 +102,14 @@ namespace Departments.Controllers
                 }
                 uvm.CreateUser.ProfilePicture = fileName;
             }
+            //Page.ClientScript.RegisterStartupScript(this.GetType(), "CallMyFunction", "clss()", true);
+            //ClientScript.RegisterStartupScript(GetType(), "Javascript", "javascript:FUNCTIONNAME(); ", true);
             uvm.CreateUser.Department = department;
             uvm.CreateUser.Id = 0;
             //_db.Entry(department).State = EntityState.Detached;
             _db.Users.Add(uvm.CreateUser);
             _db.SaveChanges();
+                
             return RedirectToAction("Index");
         }
 
@@ -107,25 +117,30 @@ namespace Departments.Controllers
         public IActionResult Edit(UserViewModel uvm)
         {
             var emp = uvm.EditUser;
+            bool fine = true;
             if (emp.Name == null || emp.DateAdded == null || emp.Department == null)
             {
-                uvm.users = _db.Users;
-                return View("Index", uvm);
+                fine = false;
             }
             var exists = _db.Departments.FirstOrDefault(d => d.Name == emp.Department.Name);
             if (exists == null)
             {
                 ModelState.AddModelError("EditUser.Department.Name", "Department doesn't exist");
-                uvm.users = _db.Users;
-                return View("Index", uvm);
+                fine = false;
             }
             else if (_db.Users.Where(u => u.DepartmentId == exists.Id).ToList().Count >= exists.Limit)
             {
                 ModelState.AddModelError("EditUser.Department.Name", "Department is already full");
-                uvm.users = _db.Users;
-                return View("Index", uvm);
+                fine = false;
             }
 
+            if (!fine)
+            {
+                uvm.users = _db.Users;
+                uvm.ImagesDict = _uvm.ImagesDict;
+                return View("Index", uvm);
+            }
+            var user = _db.Users.Find(emp.Id);
             if (uvm.Image != null)
             {
                 string path = Path.Combine(this.Environment.WebRootPath, "uploads");
@@ -141,8 +156,13 @@ namespace Departments.Controllers
                 }
                 emp.ProfilePicture = fileName;
             }
+            else
+            {
+                emp.ProfilePicture = user.ProfilePicture;
+            }
             emp.Department = exists;
             _db.Entry(exists).State = EntityState.Detached;
+            _db.Entry(user).State = EntityState.Detached;
             _db.Users.Update(emp);
             _db.SaveChanges();
             return RedirectToAction("Index");
@@ -161,6 +181,7 @@ namespace Departments.Controllers
 
             UserViewModel uvm = new UserViewModel();
             uvm.users = _db.Users;
+            uvm.ImagesDict = _uvm.ImagesDict;
             return View("Index", uvm);
         }
     }

@@ -14,6 +14,7 @@ namespace Departments.ViewModels
         public IFormFile Image { get; set; }
 
         public Dictionary<string, string> ImagesDict { get; set; }
+        public string JavascriptToRun { get; set; }
 
         public UserViewModel()
         {

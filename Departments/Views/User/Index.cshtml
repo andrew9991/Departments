@@ -75,7 +75,7 @@
 <p>
     <button onclick="Create()">Create New</button>
 </p>
-<table class="table">
+<table class="table" onload="Departments()">
     <thead>
         <tr>
             <th>
@@ -136,6 +136,8 @@
 
 @section scripts{
 <script>
+
+@Model.JavascriptToRun
 Departments();
 </script>
-            }
+}
