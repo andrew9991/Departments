@@ -85,7 +85,7 @@ namespace Departments.Controllers
                 return View("Index", dvm);
             }
 
-            if (_db.Users.Where(u => u.DepartmentId == dep.Id).ToList().Count >= dep.Limit)
+            if (_db.Users.Where(u => u.DepartmentId == dep.Id).ToList().Count > dep.Limit)
             {
                 ModelState.AddModelError("EditDepartment.Limit", "Employees exceed limit ");
                 dvm.Departments = _db.Departments;

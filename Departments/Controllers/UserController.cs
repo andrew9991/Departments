@@ -8,13 +8,15 @@ namespace Departments.Controllers
 {
     public class UserController : Controller
     {
+        private IWebHostEnvironment Environment;
         private readonly ApplicationDbContext _db;
         private UserViewModel _uvm;
 
-        public UserController(ApplicationDbContext db)
+        public UserController(ApplicationDbContext db, IWebHostEnvironment environment)
         {
             _db = db;
             _uvm = new UserViewModel();
+            Environment = environment;
         }
 
         public IActionResult Index()
@@ -28,15 +30,22 @@ namespace Departments.Controllers
             return new JsonResult(_db.Users.Find(id));
         }
 
+        public JsonResult getDepartments()
+        {
+            return new JsonResult(_db.Departments);
+        }
+
+
         [HttpPost]
         public IActionResult Create(UserViewModel uvm)
         {
-            Department department = _db.Departments.FirstOrDefault(x => x.Name == uvm.CreateUser.Department.Name);
             if(uvm.CreateUser.Name == null || uvm.CreateUser.DateAdded == null || uvm.CreateUser.Department == null)
             {
                 uvm.users = _db.Users;
                 return View("Index", uvm);
             }
+
+            Department department = _db.Departments.FirstOrDefault(x => x.Name == uvm.CreateUser.Department.Name);
             if (department == null)
             {
                 ModelState.AddModelError("CreateUser.Department.Name", "Department doesn't exist");
@@ -49,8 +58,25 @@ namespace Departments.Controllers
                 uvm.users = _db.Users;
                 return View("Index", uvm);
             }
+
+            string wwwPath = this.Environment.WebRootPath;
+            string contentPath = this.Environment.ContentRootPath;
+
+            string path = Path.Combine(this.Environment.WebRootPath, "uploads");
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
+            string fileName = DateTime.Now.ToString().GetHashCode().ToString("x") + '.' + uvm.Image.FileName.ToString().Split('.')[1];
+            using (FileStream stream = new FileStream(Path.Combine(path, fileName), FileMode.Create))
+            {
+                uvm.Image.CopyTo(stream);
+            }
+            uvm.CreateUser.ProfilePicture = fileName;
             uvm.CreateUser.Department = department;
-            _db.Entry(department).State = EntityState.Detached;
+            uvm.CreateUser.Id = 0;
+            //_db.Entry(department).State = EntityState.Detached;
             _db.Users.Add(uvm.CreateUser);
             _db.SaveChanges();
             return RedirectToAction("Index");

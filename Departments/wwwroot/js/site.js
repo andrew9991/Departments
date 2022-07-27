@@ -127,6 +127,32 @@ function EditEmp(id) {
     window.sessionStorage.setItem("editShown", editShown ? 't' : 'f');
 }
 
+function Departments() {
+
+    $.ajax({
+        type: 'GET',
+        url: 'User/getDepartments',
+        contentType: 'json',
+        success: function (result) {
+            //console.log('Data received: ');
+            console.log(result);
+            var sel = document.getElementById("emp-select-dep");
+            var sele = document.getElementById('edit-depName-input');
+            //console.log(sel);
+            //console.log(sele);
+            for (var i in result) {
+                var op = document.createElement("option");
+                op.text = result[i].name;
+
+                var op1 = document.createElement("option");
+                op1.text = result[i].name;
+                sele.add(op);
+                sel.add(op1);
+            }
+        }
+    });
+}
+
 function Employees(id) {
     if (!employeesShown) {
         empModal.style.display = "initial";

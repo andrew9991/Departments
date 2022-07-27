@@ -1,4 +1,5 @@
 ﻿using Departments.Models;
+using System.ComponentModel;
 
 namespace Departments.ViewModels
 {
@@ -8,5 +9,9 @@ namespace Departments.ViewModels
 
         public User CreateUser { get; set; }
         public User EditUser { get; set; }
+
+        [DisplayName("Profile Picture")]
+        public IFormFile Image { get; set; }
+        
     }
 }

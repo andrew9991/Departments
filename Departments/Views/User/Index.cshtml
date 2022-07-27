@@ -8,7 +8,7 @@
 <div id="c-modal">
     <div class="modal-content">
         <button onclick="Create()" class="close-modal">x</button>
-        <form id="create-form" method="post" asp-action="Create">
+        <form id="create-form" enctype="multipart/form-data" method="post" asp-action="Create">
             @*<div asp-validation-summary="All"></div>*@
             <div class="mb-4">
                 <label asp-for = "CreateUser.Name" class="form-label"></label>
@@ -22,8 +22,15 @@
             </div>
             <div class="mb-4">
                 <label asp-for = "CreateUser.Department.Name" class="form-label"></label>
-                <input asp-for = "CreateUser.Department.Name" />
+                <select id="emp-select-dep" asp-for = "CreateUser.Department.Name">
+
+                </select>
                 <span asp-validation-for = "CreateUser.Department.Name" class="text-danger"></span>
+            </div>
+            <div class="mb-4">
+                <label asp-for = "Image" class="form-label"></label>
+                <input asp-for = "Image" id="create-image" />
+                <span asp-validation-for = "Image" class="text-danger"></span>
             </div>
             <button type="submit">Create</button>
         </form>
@@ -47,9 +54,12 @@
             </div>
             <div class="mb-4">
                 <label asp-for = "EditUser.Department.Name" class="form-label"></label>
-                <input id="edit-depName-input" asp-for = "EditUser.Department.Name" />
+                <select id="edit-depName-input" asp-for = "EditUser.Department.Name" >
+
+                </select>
                 <span asp-validation-for = "EditUser.Department.Name" class="text-danger"></span>
             </div>
+
             <button type="submit">Update</button>
         </form>
     </div>
@@ -95,7 +105,7 @@
             </td>*@
             <td>
                 <button id="edit-button" onclick='EditEmp(@Json.Serialize(@item.Id))'>Edit</button>
-                <button id="details-button">Details</button>
+                <button id="details-button" onclick='EmpDetails(@Json.Serialize(@item.Id))'>Details</button>
                 <button id="delete-button" onclick='DeleteEmp(@Json.Serialize($"delete-emp-{@item.Id}"))'>Delete</button>
             </td>
         </tr>
@@ -117,3 +127,9 @@
         </div>
     </div>
 }
+
+@section scripts{
+<script>
+Departments();
+</script>
+            }
