@@ -102,3 +102,7 @@ footer{
     object-fit:cover;
     border-radius:50%;
 }
+
+.disp-none{
+    display:none;
+}

@@ -43,6 +43,25 @@ namespace Departments.Controllers
             return View(_uvm);
         }
 
+        public IActionResult Activate()
+        {
+            getImages();
+            _uvm.users = _db.Users.Where(u => u.IsActivated == true);
+            return View(_uvm);
+        }
+
+        public IActionResult ActivateEmployee(int id)
+        {
+            var emp = _db.Users.FirstOrDefault(u => u.Id == id);
+            if(emp != null)
+            {
+                emp.IsActivated = true;
+                _db.Users.Update(emp);
+                _db.SaveChanges();
+            }
+            return RedirectToAction("Activate");
+        }
+
         public JsonResult getEmployee(int id)
         {
             return new JsonResult(_db.Users.Find(id));

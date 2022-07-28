@@ -8,11 +8,43 @@ if (performance.navigation.type == performance.navigation.TYPE_RELOAD) {
     window.sessionStorage.setItem("editShown", 'f');
 }
 
+let qrVid = document.getElementById('preview');
+let qrClose = document.getElementById('close-qr');
+let scanner = new Instascan.Scanner({ video: qrVid });
 
-var createShown = window.sessionStorage.getItem("createShown") == 't';
+function scanQr() {
+    qrVid.style.display = "initial";
+    qrClose.style.display = "initial";
+    scanner.addListener('scan', function (content) {
+        //alert(content);
+        $.ajax({
+            url: 'ActivateEmployee',
+            data: { id: content }
+        })
+
+    });
+    Instascan.Camera.getCameras().then(function (cameras) {
+        if (cameras.length > 0) {
+            scanner.start(cameras[0]);
+        } else {
+            console.error('No cameras found.');
+        }
+    }).catch(function (e) {
+        console.error(e);
+    });
+}
+
+function closeQr() {
+    scanner.stop();
+    qrVid.style.display = "none";
+    qrClose.style.display = "none";
+}
+
+
+var createShown = false;//window.sessionStorage.getItem("createShown") == 't';
 var createModal = document.getElementById("c-modal");
 
-var editShown = window.sessionStorage.getItem("editShown") == 't';
+var editShown = false; // window.sessionStorage.getItem("editShown") == 't';
 var editModal = document.getElementById("e-modal");
 
 var deleteShown = false;
@@ -105,6 +137,7 @@ function EditEmp(id) {
                 document.getElementById("edit-dateAdded-input").value = result.dateAdded;
                 document.getElementById("edit-id").value = result.id;
                 document.getElementById("edit-pp").src = "uploads/".concat(result.profilePicture ? result.profilePicture : "default.jpg");
+                document.getElementById("user-qr").src = "https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl=".concat(result.id);
 
                 $.ajax({
                     type: 'GET',

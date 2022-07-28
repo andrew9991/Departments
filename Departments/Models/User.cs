@@ -14,6 +14,8 @@ namespace Departments.Models
         public int DepartmentId { get; set; }
         public DateTime DateAdded { get; set; } = DateTime.Now;
 
+        public bool IsActivated { get; set; } = false;
+
         [Required]
         [ForeignKey("Departments")]
         public int DepId { get; set; }

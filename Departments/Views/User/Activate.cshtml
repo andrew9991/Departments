@@ -1,41 +1,10 @@
 ﻿@using Departments.ViewModels
 @model UserViewModel
-
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Activate";
 }
 
-<div id="c-modal">
-    <div class="modal-content">
-        <button onclick="Create()" class="close-modal">x</button>
-        <form id="create-form" enctype="multipart/form-data" method="post" asp-action="Create">
-            @*<div asp-validation-summary="All"></div>*@
-            <div class="mb-4">
-                <label asp-for = "CreateUser.Name" class="form-label"></label>
-                <input asp-for = "CreateUser.Name" />
-                <span asp-validation-for = "CreateUser.Name" class="text-danger"></span>
-            </div>
-            <div class="mb-4">
-                <label asp-for = "CreateUser.DateAdded" class="form-label"></label>
-                <input asp-for = "CreateUser.DateAdded" />
-                <span asp-validation-for = "CreateUser.DateAdded" class="text-danger"></span>
-            </div>
-            <div class="mb-4">
-                <label asp-for = "CreateUser.Department.Name" class="form-label"></label>
-                <select id="emp-select-dep" asp-for = "CreateUser.Department.Name">
-
-                </select>
-                <span asp-validation-for = "CreateUser.Department.Name" class="text-danger"></span>
-            </div>
-            <div class="mb-4">
-                <label asp-for = "Image" class="form-label"></label>
-                <input asp-for = "Image" id="create-image" />
-                <span asp-validation-for = "Image" class="text-danger"></span>
-            </div>
-            <button type="submit">Create</button>
-        </form>
-    </div>
-</div>
+<h1>Activate</h1>
 
 <div id="e-modal">
     <div class="modal-content">
@@ -77,9 +46,11 @@
 <h1>View</h1>
 
 <p>
-    <button onclick="Create()">Create New</button>
+    <button onclick="scanQr()">Scan Qr</button>
+    <button class="disp-none" id="close-qr" onclick="closeQr()">Close Scanner</button>
 </p>
 
+<video class="disp-none" id="preview"></video>
 <table class="table" onload="Departments()">
     <thead>
         <tr>
@@ -139,10 +110,10 @@
     </div>
 }
 
-@section scripts{
+@*@section scripts{
 <script>
 
 @Model.JavascriptToRun
 Departments();
 </script>
-}
+}*@
