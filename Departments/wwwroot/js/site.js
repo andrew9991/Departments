@@ -14,20 +14,32 @@ let qrVid = document.getElementById('preview');
 let qrClose = document.getElementById('close-qr');
 let scanner = new Instascan.Scanner({ video: qrVid });
 
+
+$('#c-submit').on('click', function () {
+    var check = document.getElementsByClassName("c-null-check");
+
+    for (const i of check) {
+        var res = true;
+        if (!i.value) {
+            i.nextElementSibling.innerHTML = "This field is required";
+            res = false;
+        }
+    }
+    if(res)
+        $('#create-form').submit();
+});
+
 function scanQr() {
     qrVid.style.display = "initial";
     qrClose.style.display = "initial";
     scanner.addListener('scan', function (content) {
-        //alert(content);
-        //$.ajax({
-        //    url: 'ActivateEmployee',
-        //    data: { id: content }
-        //});
-        $.post({
-            url: '@Url.Action("User","ActivateEmployee")',
+        console.log(content);
+        $.ajax({
+            type:'Post',
+            url: 'ActivateEmployee',
             data: { id: content },
-            success: function () {
-                console.log("posted");
+            success: function (response) {
+                window.location.href = response.redirectToUrl;
             }
         });
    });

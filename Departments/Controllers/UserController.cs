@@ -50,8 +50,7 @@ namespace Departments.Controllers
             return View(_uvm);
         }
 
-        [HttpPost]
-        public IActionResult ActivateEmployee(int id)
+        public JsonResult ActivateEmployee(int id)
         {
             var emp = _db.Users.FirstOrDefault(u => u.Id == id);
             if(emp != null)
@@ -60,7 +59,7 @@ namespace Departments.Controllers
                 _db.Users.Update(emp);
                 _db.SaveChanges();
             }
-            return RedirectToAction("Activate");
+            return Json(new { redirectToUrl = Url.Action("Activate", "User") });
         }
 
         public JsonResult getEmployee(int id)
