@@ -50,6 +50,7 @@ namespace Departments.Controllers
             return View(_uvm);
         }
 
+        [HttpPost]
         public IActionResult ActivateEmployee(int id)
         {
             var emp = _db.Users.FirstOrDefault(u => u.Id == id);

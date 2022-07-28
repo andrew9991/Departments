@@ -1,6 +1,8 @@
 ﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 // for details on configuring this project to bundle and minify static web assets.
 
+//const { data } = require("jquery");
+
 // Write your JavaScript code.
 
 if (performance.navigation.type == performance.navigation.TYPE_RELOAD) {
@@ -17,12 +19,18 @@ function scanQr() {
     qrClose.style.display = "initial";
     scanner.addListener('scan', function (content) {
         //alert(content);
-        $.ajax({
-            url: 'ActivateEmployee',
-            data: { id: content }
-        })
-
-    });
+        //$.ajax({
+        //    url: 'ActivateEmployee',
+        //    data: { id: content }
+        //});
+        $.post({
+            url: '@Url.Action("User","ActivateEmployee")',
+            data: { id: content },
+            success: function () {
+                console.log("posted");
+            }
+        });
+   });
     Instascan.Camera.getCameras().then(function (cameras) {
         if (cameras.length > 0) {
             scanner.start(cameras[0]);
