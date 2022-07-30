@@ -16,6 +16,16 @@
                 <span asp-validation-for = "CreateUser.Name" class="text-danger"></span>
             </div>
             <div class="mb-4">
+                <label asp-for = "CreateUser.userName" class="form-label"></label>
+                <input asp-for = "CreateUser.userName" class="c-null-check" />
+                <span asp-validation-for = "CreateUser.userName" class="text-danger"></span>
+            </div>
+            <div class="mb-4">
+                <label asp-for = "CreateUser.Password" class="form-label"></label>
+                <input type="password" asp-for = "CreateUser.Password" class="c-null-check" />
+                <span asp-validation-for = "CreateUser.Password" class="text-danger"></span>
+            </div>
+            <div class="mb-4">
                 <label asp-for = "CreateUser.DateAdded" class="form-label"></label>
                 <input asp-for = "CreateUser.DateAdded" />
                 <span asp-validation-for = "CreateUser.DateAdded" class="text-danger"></span>

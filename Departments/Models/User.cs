@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Departments.Models
@@ -10,6 +11,12 @@ namespace Departments.Models
         [Required]
         public string Name { get; set; }
 
+        [Required]
+        [DisplayName("User Name")]
+        public string userName { get; set; }
+
+        [Required]
+        public string Password { get; set; }
         public string? ProfilePicture { get; set; }
         public int DepartmentId { get; set; }
         public DateTime DateAdded { get; set; } = DateTime.Now;
