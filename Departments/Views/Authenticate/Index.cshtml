@@ -1,12 +1,8 @@
 ﻿@using Departments.ViewModels
 @model LoginViewModel
 
-@{
-    ViewData["Title"] = "Login Page";
-}
-
 <div>
-    <form method="post" action="@Url.Action("Login")">
+    <form method="post" action="@Url.Action("login")">
         <div class="mb-4">
             <label asp-for="UserName"></label>
             <input asp-for="UserName"/>
