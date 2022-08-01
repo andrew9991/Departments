@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Departments.Controllers
 {
     [Authorize]
+
     public class DepartmentsController : Controller
     {
         private readonly ApplicationDbContext _db;
@@ -18,6 +19,7 @@ namespace Departments.Controllers
             _dvm = new DepartmentViewModel();
             _db = db;
         }
+
         public IActionResult Index()
         {
             _dvm.Departments = _db.Departments;

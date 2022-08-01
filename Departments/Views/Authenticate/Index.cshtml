@@ -2,7 +2,9 @@
 @model LoginViewModel
 
 <div>
-    <form method="post" action="@Url.Action("login")">
+    @using (Html.BeginForm("Login", "Authenticate", new { ReturnUrl = ViewBag.ReturnUrl }))
+    {
+        <input asp-for="ReturnUrl" value="@ViewBag.ReturnUrl" style="display:none"/>
         <div class="mb-4">
             <label asp-for="UserName"></label>
             <input asp-for="UserName"/>
@@ -12,6 +14,19 @@
             <input type="password" asp-for="Password"/>
         </div>
         <button type="submit">Login</button>
-    </form>
+    }
+    @*<form method="post" asp-action="Login">
+        
+        <input asp-for="ReturnUrl" value="@ViewBag.ReturnUrl" style="display:none"/>
+        <div class="mb-4">
+            <label asp-for="UserName"></label>
+            <input asp-for="UserName"/>
+        </div>
+        <div class="mb-4">
+            <label asp-for="Password"></label>
+            <input type="password" asp-for="Password"/>
+        </div>
+        <button type="submit">Login</button>
+    </form>*@
 
 </div>
